@@ -2,6 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
 canvas {
   display: block;
 }
@@ -9,7 +10,6 @@ canvas {
 body{
   background: black;
 }
-
 
 @media screen and (max-width: 500px) {
   body{
@@ -21,7 +21,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200%;
+  height: 100%;
 }
 
 canvas {
@@ -86,14 +86,14 @@ p {
   position: absolute;
 }
 
-.HEADdescription {
-  font-size: 18px;
-  font-weight: bold;
-}
-
 .description3 {
   font-size: 12px;
   color: white;
   position: absolute;
   text-align: right;
+}
+
+.HEADdescription {
+  font-size: 18px;
+  font-weight: bold;
 }

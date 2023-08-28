@@ -1,3 +1,4 @@
+// Img part
 let mic;
 let fft;
 let spectrum;
@@ -8,21 +9,24 @@ let maxFrameRate = 60;
 let minFrameRate = 10;
 
 let isRunning = false;
-
+ 
+// Music part
 let osc;
 let playing = false;
 let interval;
 let currentNoteIndex = 0;
-let notes = [60, 62, 64, 65, 67, 69, 71, 72]; // MIDI音符
+let notes = [60, 62, 64, 65, 67, 69, 71, 72]; 
 
-let fadeOutDuration = 0.1; // 渐出持续时间（秒）
-let fadeOutInterval = 10; // 渐出的时间间隔（毫秒）
+let fadeOutDuration = 0.1; 
+let fadeOutInterval = 10; 
 
+// Gallery part
 const savedImages = [];
 
-let currentView = 'animation'; // 'animation' or 'gallery'
+let currentView = 'animation'; 
 
-let playButton; // Declare the button globally
+// Buttons and description
+let playButton; 
 let description;
 let description2;
 let description3;
@@ -33,7 +37,7 @@ let myAudio = document.getElementById("myAudio");
 var startButton = document.createElement('button');
 startButton.textContent = 'Start';
 
-// Add a click event listener to the Buttons
+// The start button starts the sketch
 startButton.addEventListener('click', function () {
   start();
   document.body.removeChild(startButton);
@@ -46,6 +50,7 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   background(0);
 
+  // Img part
   noiseDetail(2);
   colorMode(HSB, 100);
   noFill();
@@ -56,56 +61,50 @@ function setup() {
     dots.push(new Dot(radius, [40, 80], 220, random(5)));
   }
 
+  // Music part
   mic = new p5.AudioIn();
   mic.start();
   fft = new p5.FFT(0, 256);
   fft.setInput(mic);
   
+  // Add title
   HEADdescription = createP('Welcome to Emotion Gallery: Feel free to speak your emotions into the microphone, or simply laugh or scream at the screen');
-  HEADdescription.position(32, 0); // 设置描述文字的位置
+  HEADdescription.position(32, 0);
   HEADdescription.addClass('HEADdescription');
 }
 
 function start() {
 	getAudioContext().resume();
 
-  // Create the Restart button
+  // Create all the buttons
   let startButton = createButton('Draw Emotion');
   startButton.mousePressed(restartAnimation);
 
-  // Create the Stop/Continue button
   let stopContinueButton = createButton('Stop/Continue');
   stopContinueButton.mousePressed(toggleAnimation1);
 
-
-  // Create the Clear Canvas button
   let clearButton = createButton('Clear Canva');
   clearButton.mousePressed(clearCanvas);
- 
 
-  // Create the View Gallery button
   let viewGalleryButton = createButton('View Gallery');
   viewGalleryButton.mousePressed(viewGallery);
   viewGalleryButton.position(width - viewGalleryButton.width - 32,70);
-
-  // Create the Save button  
+ 
   let saveButton = createButton('Save to Gallery');
   saveButton.mousePressed(saveCanvasImage);
   saveButton.position(width - viewGalleryButton.width- saveButton.width - 32,70);
   
-
-  // Create the Play Music button
   playButton = createButton('Play Music');
   playButton.mousePressed(toggleMusic);
   playButton.position(width / 2 - playButton.width / 2, height+30 );
 
   // Create a paragraph for description
   description = createP('Click "Play Music" to listen to the sound of emotion.');
-  description.addClass('description'); // 添加自定义类名
-  centerDescription(); // 调用函数使描述文字居中
+  description.addClass('description'); 
+  centerDescription();
 
   description2 = createP('-Click "Draw Emotion" to draw the emotion with speaking.');
-  description2.position(32, viewGalleryButton.height*3+12); // 设置描述文字的位置
+  description2.position(32, viewGalleryButton.height*3+12); 
 
   description3 = createP('-Click "Save to Gallery" to save the emotion as an image into Emotion Gallery.<br>-Click "View Gallery" to view the saved emotions.');
   description3.position(width - description3.width - 32, viewGalleryButton.height*3+12); // 设置描述文字的位置
@@ -114,19 +113,20 @@ function start() {
 
 function centerDescription() {
   let x = width / 2-description.width / 2;
-  let y = playButton.position().y + playButton.height/2+12; // 在按钮下方一定距离
+  let y = playButton.position().y + playButton.height/2+12; 
   description.position(x, y);
 }
 
 function startAnimation() {
   isRunning = true;
-  background(0); // Clear the canvas when starting or restarting
+  background(0);// Clear the canvas when starting or restarting
 }
 
 function stopAnimation() {
   isRunning = false;
 }
 
+// Draw the animation
 function draw() {
   if (isRunning) {
     t = millis() / 10000;
@@ -227,8 +227,6 @@ class Dot {
   }
 }
 
-
-
 function restartAnimation() {
   isRunning = true;
   background(0); // Clear the canvas when restarting
@@ -250,17 +248,18 @@ function saveCanvasImage() {
   savedImages.push(get()); // Save the current canvas as an image
 }
 
-let isPlayingMusic = false; // Track whether music is currently playing
+// Music part
+let isPlayingMusic = false; 
 
 function toggleMusic() {
   if (isPlayingMusic) {
     stopMusic();
-    playButton.html('Play Music'); // Update button text
+    playButton.html('Play Music'); 
   } else {
     playmusic();
-    playButton.html('Stop Music'); // Update button text
+    playButton.html('Stop Music'); 
   }
-  isPlayingMusic = !isPlayingMusic; // Toggle the state
+  isPlayingMusic = !isPlayingMusic; 
 }
 
 function playmusic() {
@@ -279,9 +278,9 @@ function playSound(img) {
 
 
 function playMusicWithFade(img) {
-  let bpm = 120; // 每分钟节拍数
-  let noteDuration = 0.25; // 音符持续时间（秒）
-  let spacing = (60 / bpm) * noteDuration * 1000; // 音符之间的时间间隔（毫秒）
+  let bpm = 120; 
+  let noteDuration = 0.25; 
+  let spacing = (60 / bpm) * noteDuration * 1000; 
 
   interval = setInterval(function() {
     if (currentNoteIndex >= img.width) {
@@ -296,9 +295,12 @@ function playMusicWithFade(img) {
     let g = pixelColor[1];
     let b = pixelColor[2];
     
-    let freq = map((r + g + b) / 3, 0, 255, 200, 800); // 映射颜色到音调
+    // Let the frequency of the note be mapped to the color
+    let freq = map((r + g + b) / 3, 0, 255, 200, 800); 
     let noteIndex = floor(map(freq, 200, 800, 0, notes.length - 1));
-    let amp = map(brightness(pixelColor), 0, 255, 0.1, 0.5); // 映射亮度到音量
+
+    // Let the volume of the note be mapped to the brightness
+    let amp = map(brightness(pixelColor), 0, 255, 0.1, 0.5); 
     
     let note = notes[noteIndex];
     
@@ -312,22 +314,23 @@ function playMusicWithFade(img) {
 }
 
 function playChordWithFadeInAndOut(rootNote, amp, duration) {
-  let thirdNote = rootNote + 4; // 第三音程
-  let fifthNote = rootNote + 7; // 第五音程
+  let thirdNote = rootNote + 4; 
+  let fifthNote = rootNote + 7; 
   
   playNoteWithFadeInAndOut(rootNote, amp, duration);
   playNoteWithFadeInAndOut(thirdNote, amp * 0.7, duration);
   playNoteWithFadeInAndOut(fifthNote, amp * 0.5, duration);
 }
 
+// Play a note with fade in and fade out effects
 function playNoteWithFadeInAndOut(note, amp, duration) {
   osc.freq(midiToFreq(note));
-  osc.amp(0); // 将音量设置为0，准备进行渐入效果
+  osc.amp(0);
   osc.start();
 
-  // 渐入效果
-  let fadeInDuration = 0.1; // 渐入持续时间（秒）
-  let fadeInInterval = 10; // 渐入的时间间隔（毫秒）
+  // Fade in effect
+  let fadeInDuration = 0.1; 
+  let fadeInInterval = 10; 
   let fadeInStep = amp / (fadeInDuration * 1000 / fadeInInterval);
   
   let fadeInIntervalId = setInterval(function() {
@@ -340,8 +343,8 @@ function playNoteWithFadeInAndOut(note, amp, duration) {
   }, fadeInInterval);
 
   setTimeout(function() {
-    // 渐出效果
 
+    // Fade out effect
     let fadeOutStep = amp / (fadeOutDuration * 1000 / fadeOutInterval);
     
     let fadeOutIntervalId = setInterval(function() {
@@ -360,13 +363,14 @@ function stopMusic() {
   clearInterval(interval);
   currentNoteIndex = 0;
   if (osc) {
-    osc.amp(0, fadeOutDuration); // Use fadeOutDuration for a smooth fade out
+    osc.amp(0, fadeOutDuration); 
     setTimeout(() => {
       osc.stop();
     }, fadeOutDuration * 1000);
   }
 }
 
+// Gallery part
 function viewGallery() {
   const galleryWindow = window.open('', '_blank');
   galleryWindow.document.write('<html><head><title>Gallery</title></head><body>');
@@ -455,13 +459,11 @@ function viewGallery() {
     <button class="back-button" onclick="switchToAnimation()">Back to Draw</button>
   `);
 
-  
-    // Back button to switch back to the animation view
-    galleryWindow.document.write(`
-    <h5 class="gallery-title">Emotion Gallery</h5>
+  // Back button to switch back to the animation view
+  galleryWindow.document.write(`
+  <h5 class="gallery-title">Emotion Gallery</h5>
   `);
   
-  // Create the gallery container
   galleryWindow.document.write('<div class="gallery">');
 
   // Display saved images in the gallery
@@ -476,9 +478,7 @@ function viewGallery() {
     `);
   }
 
-  //galleryWindow.document.write('</div>');
-
-  // Function to show an image in a lightbox
+  // Show an image in a lightbox
   galleryWindow.document.write(`
     <script>
       function showImage(imgSrc) {
@@ -507,10 +507,7 @@ function viewGallery() {
   galleryWindow.document.write('</body></html>');
 }
 
-function clearGallery() {
-  savedImages.length = 0;
-}
-
+// Let the animation continue when switching back to the animation view
 function toggleAnimation() {
   isRunning = !isRunning;
   continueText = isRunning ? "Continue" : "Stop";
@@ -540,4 +537,3 @@ function clearCanvas() {
   isRunning = false;
   background(0); // Clear the canvas
 }
-
