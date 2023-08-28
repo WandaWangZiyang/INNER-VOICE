@@ -23,6 +23,10 @@ const savedImages = [];
 let currentView = 'animation'; // 'animation' or 'gallery'
 
 let playButton; // Declare the button globally
+let description;
+let description2;
+let description3;
+let HEADdescription;
 
 // Create an AudioContext
 let myAudio = document.getElementById("myAudio");
@@ -34,6 +38,7 @@ startButton.addEventListener('click', function () {
   start();
   document.body.removeChild(startButton);
 });
+
 document.body.appendChild(startButton);
 
 function setup() {
@@ -55,41 +60,62 @@ function setup() {
   mic.start();
   fft = new p5.FFT(0, 256);
   fft.setInput(mic);
-
-
+  
+  HEADdescription = createP('Open the microphone and try to control the graphics with different voices.');
+  HEADdescription.position(32, 0); // 设置描述文字的位置
+  HEADdescription.addClass('HEADdescription');
 }
 
 function start() {
 	getAudioContext().resume();
 
   // Create the Restart button
-  let startButton = createButton('Restart');
+  let startButton = createButton('Draw Emotion');
   startButton.mousePressed(restartAnimation);
 
   // Create the Stop/Continue button
   let stopContinueButton = createButton('Stop/Continue');
   stopContinueButton.mousePressed(toggleAnimation1);
-  
 
-  // Create the Save button  
-  let saveButton = createButton('Save');
-  saveButton.mousePressed(saveCanvasImage);
-  
+
+  // Create the Clear Canvas button
+  let clearButton = createButton('Clear Canva');
+  clearButton.mousePressed(clearCanvas);
+ 
 
   // Create the View Gallery button
   let viewGalleryButton = createButton('View Gallery');
   viewGalleryButton.mousePressed(viewGallery);
-  
+  viewGalleryButton.position(width - viewGalleryButton.width - 32,70);
 
-  // Create the Clear Canvas button
-  let clearButton = createButton('Clear Canvas');
-  clearButton.mousePressed(clearCanvas);
+  // Create the Save button  
+  let saveButton = createButton('Save to Gallery');
+  saveButton.mousePressed(saveCanvasImage);
+  saveButton.position(width - viewGalleryButton.width- saveButton.width - 32,70);
   
 
   // Create the Play Music button
-  playButton = createButton('Play Music'); // Assign the button to the global variable
-  playButton.mousePressed(toggleMusic); // Call the new toggleMusic function
-  
+  playButton = createButton('Play Music');
+  playButton.mousePressed(toggleMusic);
+  playButton.position(width / 2 - playButton.width / 2, height+30 );
+
+  // Create a paragraph for description
+  description = createP('Click "Play Music" to listen to the sound of emotion.');
+  description.addClass('description'); // 添加自定义类名
+  centerDescription(); // 调用函数使描述文字居中
+
+  description2 = createP('-Click "Draw Emotion" to draw the emotion with speaking.');
+  description2.position(32, viewGalleryButton.height*3+12); // 设置描述文字的位置
+
+  description3 = createP('-Click "Save to Gallery" to save the emotion as an image into Emotion Gallery.<br>-Click "View Gallery" to view the saved emotions.');
+  description3.position(width - description3.width - 32, viewGalleryButton.height*3+12); // 设置描述文字的位置
+  description3.addClass('description3');
+}
+
+function centerDescription() {
+  let x = width / 2-description.width / 2;
+  let y = playButton.position().y + playButton.height/2+12; // 在按钮下方一定距离
+  description.position(x, y);
 }
 
 function startAnimation() {
@@ -354,10 +380,11 @@ function viewGallery() {
         gap: 10px;
       }
       .gallery img {
-        max-width: 300px;
+        max-width: 31vw;
         cursor: pointer;
         position: relative;
-        top: 10;
+        top: -40;
+        left: 10;
         border: 1px solid #999; 
         border-radius: 10px;
       }
@@ -380,7 +407,10 @@ function viewGallery() {
       .gallery-title {
         text-align: center;
         color: white;
-        font-size: 18px;
+        font-size: 30px;
+        font-weight: bold;
+        top: -40px;
+        position: relative;
       }
       
       body{
@@ -391,8 +421,6 @@ function viewGallery() {
         background-color: black;
         color: white;
         font-size: 16px;
-        position: relative;
-        top: -10px;
         padding: 6px 12px;
         border: none;
         border-radius: 10px;
@@ -401,14 +429,15 @@ function viewGallery() {
         overflow: hidden;
         z-index: 1;
         left: 20px;
+        top: 10px;
       }
       
       .back-button:before {
         content: "";
-        background: linear-gradient(90deg, #5d4dae, #52b4c8);
+        background: linear-gradient(90deg, #3bacc5, #e49f0b);
         position: absolute;
         top: 0;
-        left: 0;
+        right: 0;
         width: 0%;
         height: 100%;
         z-index: -1;
@@ -422,13 +451,14 @@ function viewGallery() {
     </style>
   `);
 
-    // Back button to switch back to the animation view
   galleryWindow.document.write(`
-    <h5 class="gallery-title">Emotion Gallery</h5>
+    <button class="back-button" onclick="switchToAnimation()">Back to Draw</button>
   `);
 
-  galleryWindow.document.write(`
-    <button class="back-button" onclick="switchToAnimation()">Back</button>
+  
+    // Back button to switch back to the animation view
+    galleryWindow.document.write(`
+    <h5 class="gallery-title">Emotion Gallery</h5>
   `);
   
   // Create the gallery container
