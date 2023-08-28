@@ -61,7 +61,7 @@ function setup() {
   fft = new p5.FFT(0, 256);
   fft.setInput(mic);
   
-  HEADdescription = createP('Open the microphone and try to control the graphics with different voices.');
+  HEADdescription = createP('Welcome to Emotion Gallery: Feel free to speak your emotions into the microphone, or simply laugh or scream at the screen');
   HEADdescription.position(32, 0); // 设置描述文字的位置
   HEADdescription.addClass('HEADdescription');
 }
